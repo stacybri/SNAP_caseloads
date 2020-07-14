@@ -1,0 +1,239 @@
+---
+title: "Caseload_Table_Generator"
+author: "Brian Stacy"
+date: "6/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+#specify directory
+dir <- "C:/Users/wb469649/OneDrive - WBG/Older Files/Caseloads"
+
+sim_93_00 <- "29May2020_results_3_1993_7_2000_updated"
+sim_00_07 <- "29May2020_results_7_2000_12_2007_updated"
+sim_07_13 <- "29May2020_results_12_2007_6_2013_updated"
+sim_13_16 <- "2Jun2020_results_6_2013_12_2016"
+sim_00_16 <- "2Jun2020_results_7_2000_12_2016"
+
+#old set of results for July
+
+sim_00_16_old <- "sims_8_1_2019"
+
+```
+
+## Introduction
+
+This file will automatically produce the tables for the caseloads paper
+
+```{r data, include=FALSE}
+
+# read in data
+df_93_00 <- read_excel(path=paste(dir, sim_93_00, "dlc_ip_24lags_fsp.xls", sep="/"))
+df_00_07 <- read_excel(path=paste(dir, sim_00_07, "dlc_ip_24lags_fsp.xls", sep="/"))
+df_07_13 <- read_excel(path=paste(dir, sim_07_13, "dlc_ip_24lags_fsp.xls", sep="/"))
+df_13_16 <- read_excel(path=paste(dir, sim_13_16, "dlc_ip_24lags_fsp.xls", sep="/"))
+df_00_16 <- read_excel(path=paste(dir, sim_00_16, "dlc_ip_24lags_fsp.xls", sep="/"))
+
+#old set of results
+df_00_16_old <- read_excel(path=paste(dir, sim_00_16_old, "dlc_ip_24lags_fsp_7_2000_12_2016.xls", sep="/"))
+
+#compare old with new
+compare <- df_00_16_old %>%
+  inner_join(df_00_16)
+
+```
+
+```{r data_cleaning}
+
+for (i in c('df_93_00', 'df_00_07', 'df_07_13', 'df_13_16', 'df_00_16', 'df_00_16_old')) {
+
+temp <- get(i)
+
+#reformat so that standard errors have parenthesis and we take 100-. for several of the predicted values, which we do in the paper
+temp <- temp %>%
+  mutate(across(contains("Fraction Explained"), ~if_else(Estimate=="Estimate", (100-100*.), (100*.)))) %>%
+  mutate(across(c(contains("Predicted Change"),contains("Actual Change")), ~round(100*.,1))) %>%
+  mutate(across(c(contains("Fraction Explained"),contains("Change"),contains("Actual Change")),
+                ~case_when(
+                  Estimate=="Estimate" ~ paste(as.character(round(.,1)),'%',sep=""),
+                  Estimate=="Standard Error" ~ paste("(",round(.,1),")", sep="") ,
+                  TRUE ~ as.character(NA)
+                  )
+                )) %>% #now some final cleaning
+  rename(state_pc='(firstnm) state_pc',
+         state_fips_code='State FIPS Code')
+
+assign(paste(i, 'updated', sep="_"), temp)
+
+}
+
+```
+
+### Table 3
+
+```{r table_3}
+
+for (i in c('93_00', '00_07', '07_13', '13_16', '00_16')) {
+  
+
+
+temp<-get(paste('df',i,'updated', sep="_")) %>%
+  filter(state_fips_code %in% c('USA Overall')) %>%
+  mutate(spec=i) %>%
+  select(c("spec",
+           "Total Actual Change",
+           "Predicted Change if All Observable Factors Changed",
+           "Fraction Explained Predicted- no change All FSP Reform Variables",
+           "Fraction Explained Predicted- no change FSP Reform Eligibility",
+           "Fraction Explained Predicted- no change FSP Reform Affecting Transaction Costs",
+           "Fraction Explained Predicted- no change only the Welfare Variable (No EITC)",
+           "Fraction Explained Predicted- no change only the VETIC Variable (No Welfare)",
+           "Fraction Explained Predicted- no change Economic and Seasonal Factors" 
+           ))
+  
+  assign(paste('tab_3',i, sep="_"), temp)
+
+}
+
+tab_3 <- bind_rows(tab_3_93_00,tab_3_00_07,tab_3_07_13,tab_3_13_16,tab_3_00_16)
+
+kable(tab_3,
+          caption="Table 3. Simulation Results of the Long-Run Determinants of State Policy Options on Individuals Receiving Food Stamps
+") %>%
+  kable_styling()
+```
+
+### Table 4
+
+```{r table_4}
+
+tab_4<-df_00_16_updated %>%
+  filter(state_fips_code %in% c('USA Overall',
+                                '6', #california
+                                '12', #florida
+                                '26', #michigan
+                                '42', #Pennsylvania
+                                '48', #texas
+                                '36' #new york
+  )) %>%
+  arrange(
+    factor(state_fips_code, levels=c('USA Overall',
+                                '6', #california
+                                '12', #florida
+                                '26', #michigan
+                                '42', #Pennsylvania
+                                '48', #texas
+                                '36' #new york
+  ) )
+  ) %>%
+  select(c("state_pc",
+           "Total Actual Change",
+           "Predicted Change if All Observable Factors Changed",
+           "Fraction Explained Predicted- no change All FSP Reform Variables",
+           "Fraction Explained Predicted- no change FSP Reform Eligibility",
+           "Fraction Explained Predicted- no change FSP Reform Affecting Transaction Costs",
+           "Fraction Explained Predicted- no change Economic and Seasonal Factors" 
+           ))
+
+
+#display in Datatable
+kable(tab_4,
+          caption="Table 4. Simulation Results of the Long-Run Determinants of State Policy Options on Individuals Receiving Food Stamps Selected States,  2000-16
+") %>%
+  kable_styling()
+
+# #old numbers for comparison
+# tab_4_old<-df_00_16_old_updated %>%
+#   filter(state_fips_code %in% c('USA Overall',
+#                                 '6', #california
+#                                 '12', #florida
+#                                 '26', #michigan
+#                                 '42', #Pennsylvania
+#                                 '48', #texas
+#                                 '36' #new york
+#   )) %>%
+#   arrange(
+#     factor(state_fips_code, levels=c('USA Overall',
+#                                 '6', #california
+#                                 '12', #florida
+#                                 '26', #michigan
+#                                 '42', #Pennsylvania
+#                                 '48', #texas
+#                                 '36' #new york
+#   ) )
+#   ) %>%
+#   select(c("state_pc",
+#            "Total Actual Change",
+#            "Predicted Change if All Observable Factors Changed",
+#            "Fraction Explained Predicted- no change All FSP Reform Variables",
+#            "Fraction Explained Predicted- no change FSP Reform Eligibility",
+#            "Fraction Explained Predicted- no change FSP Reform Affecting Transaction Costs",
+#            "Fraction Explained Predicted- no change Economic and Seasonal Factors" 
+#            ))
+
+```
+
+### Table 5 
+```{r tab_5}
+
+tab_5<-df_00_16_updated %>%
+  filter(state_fips_code %in% c('USA Overall',
+                                'Bottom 10% Eligibility Policies',
+                                'Top 10% Eligibility Policies',
+                                'Bottom 10% Transaction Policies',
+                                'Top 10% Transaction Policies',
+                                'Bottom 10% Overall FSP',
+                                'Top 10% Overall FSP'
+  )) %>%
+  arrange(
+    factor(state_fips_code, levels=c('USA Overall',
+                                'Bottom 10% Eligibility Policies',
+                                'Top 10% Eligibility Policies',
+                                'Bottom 10% Transaction Policies',
+                                'Top 10% Transaction Policies',
+                                'Bottom 10% Overall FSP',
+                                'Top 10% Overall FSP'
+  ) )
+  ) %>%
+  select(c("state_fips_code",
+           "Total Actual Change",
+           "Predicted Change if All Observable Factors Changed",
+           "Fraction Explained Predicted- no change All FSP Reform Variables",
+           "Fraction Explained Predicted- no change FSP Reform Eligibility",
+           "Fraction Explained Predicted- no change FSP Reform Affecting Transaction Costs",
+           "Fraction Explained Predicted- no change Economic and Seasonal Factors" 
+           ))
+
+
+#display in Datatable
+kable(tab_5,
+          caption="Table 5: Simulation Results of the Long-Run Determinants of State Policy Options on Individuals Receiving Food Stamps Active and Inactive Policy States, 2000-16
+") %>%
+  kable_styling()
+
+```
+
+### Table 6
+
+```{r tab_6}
+
+tab_6 <- df_00_16_updated %>%
+  filter(state_pc=="USA") %>%
+    select(c("state_fips_code",
+           "Total Actual Change",
+           "Predicted Change if All Observable Factors Changed",
+           "Predicted Change- no change All FSP Reform Variables"
+           )) 
+#display in Datatable
+kable(tab_6,
+          caption="Table 6: Counterfactual Simulation Results of the Long-Run Determinants of State Policy Options on Individuals Receiving Food Stamps.  Baseline Exposure, and Full Exposure Scenarios, 2000-16
+") %>%
+  kable_styling()
+
+
+```
+
