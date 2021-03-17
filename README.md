@@ -20,61 +20,61 @@ Since the 1990s, states received unprecedented flexibility to determine Suppleme
 
 **Dependent Variables** 	
 
-h_fsp_toth		Monthly HH Caseloads, NOT logged, Deflated	
+**h_fsp_toth** -		Monthly HH Caseloads, NOT logged, Deflated	
 
-l_h_fsp_toth	Monthly HH Caseloads, Deflated by #hholds	
+**l_h_fsp_toth** -	Monthly HH Caseloads, Deflated by #hholds	
 
-i_fsp_totp		Monthly Indiv Caseloads, NOT logged, Deflated	
+**i_fsp_totp** -		Monthly Indiv Caseloads, NOT logged, Deflated	
 
-l_i_fsp_totp	Logged Monthly Ind. Caseloads, deflated by #people	
+**l_i_fsp_totp** -	Logged Monthly Ind. Caseloads, deflated by #people	
 
 **Non Policy Covariates**	
 
-unempr		Unemployment Rate	
+**unempr** -		Unemployment Rate	
 
-emp			Total Covered Employment per capita (Just divided total employment by population so didn't adjust for working age pop)	
+**emp** -			Total Covered Employment per capita (Just divided total employment by population so didn't adjust for working age pop)	
 
-smeff 		State-Month Dummies	
+**smeff** - 		State-Month Dummies	
 
-st_fips		State	
+**st_fips** -		State	
 
-period		time	
+**period** -		time	
 
-temp			absolute deviation from average temperature	
+**temp** -			absolute deviation from average temperature	
 
-demgov		Democratic Governor	
+**demgov** -		Democratic Governor	
 		
-**Policy Variables**
+**Policy Variables** -
 
-simplify				Year-Month Created Simplified Reporting	
+**simplify** -				Year-Month Created Simplified Reporting	
 
-CertPeriodEarners0103 		Percent cert. period 1-3 months for earners (QC data generated)	
+**CertPeriodEarners0103** -		Percent cert. period 1-3 months for earners (QC data generated)	
 
-CashAsstTransBenefits		Number of months of transitional benefits to TANF leavers (with missing values filled in)	
+**CashAsstTransBenefits** -		Number of months of transitional benefits to TANF leavers (with missing values filled in)	
 
-IssuanceEBT 			Percentage of $ value of FSP benefits issued by EBT	
+**IssuanceEBT** - 			Percentage of $ value of FSP benefits issued by EBT	
 
-Biometric 				State uses finger imaging and/or facial imaging	
+**Biometric** - 				State uses finger imaging and/or facial imaging	
 
-outreachdoll			Dollar amount of combined state, federal, and FNS grants towards outreach.	
+**outreachdoll** -			Dollar amount of combined state, federal, and FNS grants towards outreach.	
 
-ApplyOnline 			State allows online application, some of these states require signature to be mailed in	
+**ApplyOnline**  -			State allows online application, some of these states require signature to be mailed in	
 
-car_1notallexempt			Exempts at least one vehicle but doesn't offer full exemption	
+**car_1notallexempt** -			Exempts at least one vehicle but doesn't offer full exemption	
 
-car_allexempt			Exempts All Vehicles	
+**car_allexempt** -			Exempts All Vehicles	
 
-teitc0mr         			real max for 2 kids fed+state eitc for tax year, in thousands	
+**teitc0mr** -        			real max for 2 kids fed+state eitc for tax year, in thousands	
 
-teitc_pay				real max for 2 kids fed+state eitc for tax year, in thousands * state-month federal income tax payouts	
+**teitc_pay** -				real max for 2 kids fed+state eitc for tax year, in thousands * state-month federal income tax payouts	
 
-nonfull				Noncitizens under age 65 are fully eligible	
+**nonfull** -				Noncitizens under age 65 are fully eligible	
 
-nonpart				Noncitizens under age 65 are at least partially eligible	
+**nonpart** -				Noncitizens under age 65 are at least partially eligible	
 
-welfare				Implementation of TANF or AFDC Waiver	
+**welfare** -				Implementation of TANF or AFDC Waiver	
 
-abawd_final   Portion of ABAWDs SUBJECT to work requirement.	
+**abawd_final** -   Portion of ABAWDs SUBJECT to work requirement.	
 	
 ## Other details
 
