@@ -18,7 +18,7 @@ Since the 1990s, states received unprecedented flexibility to determine Suppleme
 
 # Codebook
 
-**Dependent Variables** 	
+## Dependent Variables 	
 
 **h_fsp_toth** -		Monthly HH Caseloads, NOT logged, Deflated	
 
@@ -28,7 +28,7 @@ Since the 1990s, states received unprecedented flexibility to determine Suppleme
 
 **l_i_fsp_totp** -	Logged Monthly Ind. Caseloads, deflated by #people	
 
-**Non Policy Covariates**	
+## Non Policy Covariates
 
 **unempr** -		Unemployment Rate	
 
@@ -44,7 +44,7 @@ Since the 1990s, states received unprecedented flexibility to determine Suppleme
 
 **demgov** -		Democratic Governor	
 		
-**Policy Variables** -
+## Policy Variables
 
 **simplify** -				Year-Month Created Simplified Reporting	
 
